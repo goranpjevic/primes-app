@@ -9,3 +9,7 @@ the program checks for primes with a naive test and the [Miller–Rabin primalit
 
 * generate prime numbers based on a specified number of bits
 * check, whether a number is prime or not
+
+## screenshot
+
+![screenshot](images/screenshot.png)
