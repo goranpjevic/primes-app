@@ -13,3 +13,17 @@ the program checks for primes with a naive test and the [Miller–Rabin primalit
 ## screenshot
 
 ![screenshot](images/screenshot.png)
+
+## how it works
+
+## lcg
+
+random numbers are generated using a [linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator).
+
+the lcg algorithm works as follows:
+
+```
+r(i+1) = a*r(i) + b (mod m)
+```
+
+the seed r(0) is set to 1.
