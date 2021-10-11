@@ -9,6 +9,16 @@
 ;(require 'ltk)
 (use-package :ltk)
 
+; seed for the lcg
+(defparameter *r* 1)
+; linear congruential generator
+(defun lcg (m a b)
+  (setf *r*
+	(mod 
+	  (+ (* a *r*)
+	     b)
+	  m)))
+
 ; gui main function
 (with-ltk ()
 	  ; set window title
