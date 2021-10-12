@@ -5,8 +5,6 @@
     (load quicklisp-init)))
 
 (ql:quickload :ltk)
-;(require 'asdf)
-;(require 'ltk)
 (use-package :ltk)
 
 ; seed for the lcg
@@ -46,37 +44,26 @@
 
 		 ; make buttons
 		 (generate-prime-button (make-instance 'button :text "generate prime"))
-;		 (generate-prime-button (make-instance 'button :text "generate prime"
-;						       :command (lambda ()
-;								  (format t "value: ~A~&" (value miller-rabin-button)))))
 		 (check-prime-button (make-instance 'button :text "check if prime")))
 
+	    ; set default option for the radio buttons
+	    (setf (value naive-button) "NAIVE")
+
+	    ; naive method for testing prime numbers
 	    (defun naive ()
 	      (setf (text result-output) (lcg (expt 2 32) 69069 0)))
 
+	    ; miller-rabin method for testing prime numbers
 	    (defun miller-rabin ()
 	      (setf (text result-output) (+ 1 2)))
 
-	    (setf (value naive-button) "NAIVE")
-
+	    ; generate random prime number based on the chosen test method
 	    (defun generate-prime ()
 	      (if (equal (value naive-button) 'LTK::NAIVE)
 		(naive)
 		(miller-rabin)))
 
-; 	    (format t "val: ~A~&" (value naive-button))
-; 	    (format t "rand: ~A~&" (lcg (expt 2 32) 69069 0))
-
-
 	    (setf (command generate-prime-button) #'generate-prime)
-
-	    ; (setf (command generate-prime-button)
-		  ; (string= (value naive-button) "NAIVE")
-		    ; (naive result-output time-output)
-		    ; (miller-rabin result-output time-output))
-
-	    ;(setf (text result-output) (value naive-button))
-	    ; (setf (text result-output) (lcg (expt 2 32) 69069 0))
 
 	    ; put gui widgets on grid
 	    (grid naive-button 0 0 :padx 5 :pady 5)
