@@ -50,16 +50,16 @@
 	    (setf (value naive-button) "NAIVE")
 
 	    ; naive method for testing prime numbers
-	    (defun ltk::naive ()
+	    (defun naive ()
 	      (setf (text result-output) (lcg (expt 2 32) 69069 0)))
 
 	    ; miller-rabin method for testing prime numbers
-	    (defun ltk::miller-rabin ()
+	    (defun miller-rabin ()
 	      (setf (text result-output) (+ 1 2)))
 
 	    ; generate random prime number based on the chosen test method
 	    (defun generate-prime ()
-	      (funcall (value naive-button)))
+	      (funcall (intern (string (value naive-button)))))
 
 	    (setf (command generate-prime-button) #'generate-prime)
 
