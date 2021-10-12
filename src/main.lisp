@@ -26,14 +26,11 @@
 
 	  ; make radio buttons
 	  (let* ((naive-button (make-instance 'radio-button :text "naive"
-					      :value :naive
+					      :value "NAIVE"
 					      :variable "method"))
 		 (miller-rabin-button (make-instance 'radio-button :text "miller-rabin"
-					    :value :miller-rabin
+					    :value "MILLER-RABIN"
 					    :variable "method"))
-		 ; make buttons
-		 (generate-prime-button (make-instance 'button :text "generate prime"))
-		 (check-prime-button (make-instance 'button :text "check if prime"))
 
 		 ; make entry boxes
 		 (number-of-bits (make-instance 'entry))
@@ -44,8 +41,42 @@
 		 (number-of-bits-label (make-instance 'label :text "number of bits:"))
 		 (s-label (make-instance 'label :text "s:"))
 		 (prime-label (make-instance 'label :text "prime to be checked:"))
-		 (result-output (make-instance 'label))
-		 (time-output (make-instance 'label)))
+		 (result-output (make-instance 'label :text ""))
+		 (time-output (make-instance 'label :text ""))
+
+		 ; make buttons
+		 (generate-prime-button (make-instance 'button :text "generate prime"))
+;		 (generate-prime-button (make-instance 'button :text "generate prime"
+;						       :command (lambda ()
+;								  (format t "value: ~A~&" (value miller-rabin-button)))))
+		 (check-prime-button (make-instance 'button :text "check if prime")))
+
+	    (defun naive ()
+	      (setf (text result-output) (lcg (expt 2 32) 69069 0)))
+
+	    (defun miller-rabin ()
+	      (setf (text result-output) (+ 1 2)))
+
+	    (setf (value naive-button) "NAIVE")
+
+	    (defun generate-prime ()
+	      (if (equal (value naive-button) 'LTK::NAIVE)
+		(naive)
+		(miller-rabin)))
+
+; 	    (format t "val: ~A~&" (value naive-button))
+; 	    (format t "rand: ~A~&" (lcg (expt 2 32) 69069 0))
+
+
+	    (setf (command generate-prime-button) #'generate-prime)
+
+	    ; (setf (command generate-prime-button)
+		  ; (string= (value naive-button) "NAIVE")
+		    ; (naive result-output time-output)
+		    ; (miller-rabin result-output time-output))
+
+	    ;(setf (text result-output) (value naive-button))
+	    ; (setf (text result-output) (lcg (expt 2 32) 69069 0))
 
 	    ; put gui widgets on grid
 	    (grid naive-button 0 0 :padx 5 :pady 5)
