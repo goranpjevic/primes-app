@@ -72,8 +72,7 @@
 						      ; range for random numbers
 						      ; generated with lcg
 						      ; should be: [0,2^(n-1)-1]
-						      (+ (lcg (1- (expt 2 (1-
-									   n)))
+						      (+ (lcg (expt 2 (1- n))
 							      69069 0)
 							 ; add 2^(n-1)
 							 (expt 2 (1- n)))))))
