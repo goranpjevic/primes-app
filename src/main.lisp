@@ -63,12 +63,6 @@
 	      (defun miller-rabin ()
 		(setf (text result-output) (+ 1 2)))
 
-	      (defun test ()
-		(if (not (equal 17
-				(+ 1 (floor (log 69069 2)))))
-		  (format t "not equal")
-		  (format t "equal")))
-
 	      (defun get-random-number ()
 		(lcg (expt 2 32) 69069 0))
 		  
