@@ -2,7 +2,7 @@
 (use-package :ltk)
 
 ; seed for the lcg
-(defparameter *r* 1)
+(defvar *r* 1)
 ; linear congruential generator
 (defun lcg (m a b)
   (setf *r*
