@@ -45,33 +45,47 @@
 	      (setf (value naive-button) "NAIVE")
 
 	      ; naive method for testing prime numbers
-	      (defun naive ()
+	      (defun naive (random-number)
 		(let ((j 3))
-		  (if (evenp *r*)
-		    (setq *r* (+ *r* 1)))
+		  (if (evenp random-number)
+		    (setq random-number (+ random-number 1)))
 		  (loop
 		    (setq j 3)
-		    (loop while (and (not (integerp (/ *r* j)))
-				     (<= j (sqrt *r*)))
+		    (loop while (and (not (integerp (/ random-number j)))
+				     (<= j (sqrt random-number)))
 			  do
 			  (setq j (+ j 2)))
-		    (when (> j (sqrt *r*)) (return *r*))
-		    (setq *r* (+ *r* 2)))))
+		    (when (> j (sqrt random-number)) (return random-number))
+		    (setq random-number (+ random-number 2)))))
 
 
 	      ; miller-rabin method for testing prime numbers
-	      (defun miller-rabin ()
-		(setf (text result-output) (+ 1 2)))
+	      (defun miller-rabin (random-number)
+		(setf (text result-output) random-number))
 
-	      (defun get-random-number ()
-		(lcg (expt 2 32) 69069 0))
-		  
-	      ; generate random prime number based on the chosen test method
 	      (defun generate-prime ()
+		; get random number of number_of_bits bits
+		(let ((n (read-from-string (text number-of-bits))))
+		  ; check for prime numbers based on the chosen test method
+		  (setf (text result-output) (funcall (intern (string (value
+									naive-button)))
+						      ; range for random numbers
+						      ; generated with lcg
+						      ; should be: [0,2^(n-1)-1]
+						      (+ (lcg (1- (expt 2 (1-
+									   n)))
+							      69069 0)
+							 ; add 2^(n-1)
+							 (expt 2 (1- n)))))))
+
+	      (defun super-duper ()
 		; generate random number with n bits
 		(if (not (equal (read-from-string (text number-of-bits))
-			(+ 1 (floor (log (get-random-number) 2)))))
+				(+ 1 (floor (log
+					      (lcg (expt 2 32) 69069 0)
+					      2)))))
 		  (generate-prime)
+		  ; check for prime numbers based on the chosen test method
 		  (setf (text result-output) (funcall (intern (string (value naive-button)))))))
 
 	      (setf (command generate-prime-button) #'generate-prime)
