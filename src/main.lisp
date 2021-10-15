@@ -83,7 +83,7 @@
 				(+ 1 (floor (log
 					      (lcg (expt 2 32) 69069 0)
 					      2)))))
-		  (generate-prime)
+		  (super-duper)
 		  ; check for prime numbers based on the chosen test method
 		  (setf (text result-output) (funcall (intern (string (value naive-button)))))))
 
