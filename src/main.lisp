@@ -11,6 +11,24 @@
 	     b)
 	  m)))
 
+; naive method for testing prime numbers
+(defun naive (random-number)
+  (let ((j 3))
+    (if (evenp random-number)
+      (setq random-number (+ random-number 1)))
+    (loop
+      (setq j 3)
+      (loop while (and (not (integerp (/ random-number j)))
+		       (<= j (sqrt random-number)))
+	    do
+	    (setq j (+ j 2)))
+      (when (> j (sqrt random-number)) (return random-number))
+      (setq random-number (+ random-number 2)))))
+
+; miller-rabin method for testing prime numbers
+(defun miller-rabin (random-number)
+  random-number)
+
 (defun main (*posix-argv*)
   ; gui main function
   (with-ltk ()
@@ -43,25 +61,6 @@
 
 	      ; set default option for the radio buttons
 	      (setf (value naive-button) "NAIVE")
-
-	      ; naive method for testing prime numbers
-	      (defun naive (random-number)
-		(let ((j 3))
-		  (if (evenp random-number)
-		    (setq random-number (+ random-number 1)))
-		  (loop
-		    (setq j 3)
-		    (loop while (and (not (integerp (/ random-number j)))
-				     (<= j (sqrt random-number)))
-			  do
-			  (setq j (+ j 2)))
-		    (when (> j (sqrt random-number)) (return random-number))
-		    (setq random-number (+ random-number 2)))))
-
-
-	      ; miller-rabin method for testing prime numbers
-	      (defun miller-rabin (random-number)
-		(setf (text result-output) random-number))
 
 	      (defun generate-prime ()
 		; get random number of number_of_bits bits
