@@ -59,9 +59,6 @@
 		   (generate-prime-button (make-instance 'button :text "generate prime"))
 		   (check-prime-button (make-instance 'button :text "check if prime")))
 
-	      ; set default option for the radio buttons
-	      (setf (value naive-button) "NAIVE")
-
 	      (defun generate-prime ()
 		; get random number of number_of_bits bits
 		(let ((n (read-from-string (text number-of-bits))))
@@ -86,6 +83,10 @@
 		  ; check for prime numbers based on the chosen test method
 		  (setf (text result-output) (funcall (intern (string (value naive-button)))))))
 
+	      ; set default option for the radio buttons
+	      (setf (value naive-button) "NAIVE")
+
+	      ; call generate-prime, when generate-prime-button is clicked
 	      (setf (command generate-prime-button) #'generate-prime)
 
 	      ; put gui widgets on grid
