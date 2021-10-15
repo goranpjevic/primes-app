@@ -46,15 +46,39 @@
 
 	      ; naive method for testing prime numbers
 	      (defun naive ()
-		(setf (text result-output) (lcg (expt 2 32) 69069 0)))
+		(let ((j 3))
+		  (if (evenp *r*)
+		    (setq *r* (+ *r* 1)))
+		  (loop
+		    (setq j 3)
+		    (loop while (and (not (integerp (/ *r* j)))
+				     (<= j (sqrt *r*)))
+			  do
+			  (setq j (+ j 2)))
+		    (when (> j (sqrt *r*)) (return *r*))
+		    (setq *r* (+ *r* 2)))))
+
 
 	      ; miller-rabin method for testing prime numbers
 	      (defun miller-rabin ()
 		(setf (text result-output) (+ 1 2)))
 
+	      (defun test ()
+		(if (not (equal 17
+				(+ 1 (floor (log 69069 2)))))
+		  (format t "not equal")
+		  (format t "equal")))
+
+	      (defun get-random-number ()
+		(lcg (expt 2 32) 69069 0))
+		  
 	      ; generate random prime number based on the chosen test method
 	      (defun generate-prime ()
-		(funcall (intern (string (value naive-button)))))
+		; generate random number with n bits
+		(if (not (equal (read-from-string (text number-of-bits))
+			(+ 1 (floor (log (get-random-number) 2)))))
+		  (generate-prime)
+		  (setf (text result-output) (funcall (intern (string (value naive-button)))))))
 
 	      (setf (command generate-prime-button) #'generate-prime)
 
