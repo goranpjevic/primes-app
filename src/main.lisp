@@ -15,12 +15,13 @@
   ; naive method for testing prime numbers
   (if (evenp random-number)
     (naive (1+ random-number))
-    (let ((j 3))
+    (let ((j 3)
+	  (sqr (sqrt random-number)))
       (loop while (and (not (equal (mod random-number j) 0))
-		       (<= j (sqrt random-number)))
+		       (<= j sqr))
 	    do
 	    (setq j (+ j 2)))
-      (if (> j (sqrt random-number))
+      (if (> j sqr)
 	(eval random-number)
 	(naive (+ random-number 2))))))
 
