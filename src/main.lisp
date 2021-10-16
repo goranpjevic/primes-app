@@ -9,6 +9,7 @@
 
 (defun check-for-divisors (r &optional (j 3) (s (sqrt r)))
   ; check all odd divisors of r until √r
+  ; return r if it's prime, otherwise nil
   (if (> j s)
     r
     (if (not (equal (mod r j) 0))
@@ -20,9 +21,35 @@
       ; r is not prime, check r+2
       (naive (+ random-number 2))))
 
-; miller-rabin method for testing prime numbers
-(defun miller-rabin (random-number)
-  random-number)
+(defun random-number-in-range (a b)
+  ; get random number in range [a, b]
+  (mod (+ a (lcg (expt 2 32) 69069 0)) (- b (1+ a))))
+
+(defun find-d-k (p &optional (d (1- p)) (k 0))
+  ; return d and k, such that d*(2^k)==p-1
+  (if (evenp d)
+    (find-d-k p (/ d 2) (1+ k))
+    (values d k)))
+
+(defun update-x (x p k &optional (i 0))
+  ; update the x value in the miller-rabin function
+  (if (and (<= i (1- k))
+	   (not (equal x (1- p))))
+    (update-x (mod (expt x 2) p) p k (1+ i))
+    x))
+
+(defun miller-rabin (p s)
+  ; miller-rabin method for testing prime numbers
+  (if (<= p 3) "prime"
+    (if (evenp p) "not prime"
+      (multiple-value-bind (d k) (find-d-k p)
+	(or (dotimes (j s)
+	      (let ((a (random-number-in-range 2 (- p 2))))
+		(let ((x (mod (expt a d) p)))
+		  (if (not (or (equal x 1)
+			       (equal (update-x x p k) (1- p))))
+		    (return "not prime")))))
+	    "probably prime")))))
 
 (defun main (*posix-argv*)
   ; gui main function
