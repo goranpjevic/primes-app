@@ -17,6 +17,7 @@
     (eval r)
     (if (not (equal (mod r j) 0))
       (check-for-divisors r (+ j 2) s))))
+
 (defun naive (random-number)
   ; naive method for testing prime numbers
   (or (check-for-divisors random-number 3 (sqrt random-number))
@@ -73,15 +74,16 @@
 								 ; add 2^(n-1)
 								 (expt 2 (1- n))))))))
 
-	      (defun super-duper ()
-		; generate random number with n bits
-		(if (equal (read-from-string (text number-of-bits))
-				(+ 1 (floor (log
-					      (lcg (expt 2 32) 69069 0)
-					      2))))
-		  ; check for prime numbers based on the chosen test method
-		  (setf (text result-output) (funcall (intern (string (value naive-button)))))
-		  (super-duper)))
+;	      (defun super-duper ()
+;		; generate random number with n bits
+;		(if (equal (read-from-string (text number-of-bits))
+;				(+ 1 (floor (log
+;					      (lcg (expt 2 32) 69069 0)
+;					      2))))
+;		  ; check for prime numbers based on the chosen test method
+;		  (setf (text result-output) (funcall (intern (string (value
+;									naive-button)))))
+;		  (super-duper)))
 
 	      ; set default option for the radio buttons
 	      (setf (value naive-button) "NAIVE")
@@ -101,5 +103,4 @@
 	      (grid generate-prime-button 4 0 :padx 5 :pady 5)
 	      (grid check-prime-button 4 1 :padx 5 :pady 5)
 	      (grid result-output 5 0 :padx 5 :pady 5)
-	      (grid time-output 5 1 :padx 5 :pady 5)))
-  )
+	      (grid time-output 5 1 :padx 5 :pady 5))))
