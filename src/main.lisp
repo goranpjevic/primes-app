@@ -11,19 +11,18 @@
 	     b)
 	  m)))
 
-; naive method for testing prime numbers
 (defun naive (random-number)
-  (let ((j 3))
-    (if (evenp random-number)
-      (setq random-number (+ random-number 1)))
-    (loop
-      (setq j 3)
-      (loop while (and (not (integerp (/ random-number j)))
+  ; naive method for testing prime numbers
+  (if (evenp random-number)
+    (naive (1+ random-number))
+    (let ((j 3))
+      (loop while (and (not (equal (mod random-number j) 0))
 		       (<= j (sqrt random-number)))
 	    do
 	    (setq j (+ j 2)))
-      (when (> j (sqrt random-number)) (return random-number))
-      (setq random-number (+ random-number 2)))))
+      (if (> j (sqrt random-number))
+	(eval random-number)
+	(naive (+ random-number 2))))))
 
 ; miller-rabin method for testing prime numbers
 (defun miller-rabin (random-number)
