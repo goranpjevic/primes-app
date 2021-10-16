@@ -5,11 +5,7 @@
 (defvar *r* 1)
 ; linear congruential generator
 (defun lcg (m a b)
-  (setf *r*
-	(mod 
-	  (+ (* a *r*)
-	     b)
-	  m)))
+  (setf *r* (mod (+ (* a *r*) b) m)))
 
 (defun check-for-divisors (r j s)
   ; check all odd divisors of r until √r
