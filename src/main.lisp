@@ -74,13 +74,13 @@
 
 	      (defun super-duper ()
 		; generate random number with n bits
-		(if (not (equal (read-from-string (text number-of-bits))
+		(if (equal (read-from-string (text number-of-bits))
 				(+ 1 (floor (log
 					      (lcg (expt 2 32) 69069 0)
-					      2)))))
-		  (super-duper)
+					      2))))
 		  ; check for prime numbers based on the chosen test method
-		  (setf (text result-output) (funcall (intern (string (value naive-button)))))))
+		  (setf (text result-output) (funcall (intern (string (value naive-button)))))
+		  (super-duper)))
 
 	      ; set default option for the radio buttons
 	      (setf (value naive-button) "NAIVE")
