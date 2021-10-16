@@ -7,7 +7,7 @@
 (defun lcg (m a b)
   (setf *r* (mod (+ (* a *r*) b) m)))
 
-(defun check-for-divisors (r j s)
+(defun check-for-divisors (r &optional (j 3) (s (sqrt r)))
   ; check all odd divisors of r until √r
   (if (> j s)
     r
@@ -16,7 +16,7 @@
 
 (defun naive (random-number)
   ; naive method for testing prime numbers
-  (or (check-for-divisors random-number 3 (sqrt random-number))
+  (or (check-for-divisors random-number)
       ; r is not prime, check r+2
       (naive (+ random-number 2))))
 
