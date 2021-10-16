@@ -64,15 +64,19 @@
 		  ; check for prime numbers based on the chosen test method
 		  (setf (text result-output) (funcall (intern (string (value
 									naive-button)))
-						      ; make number odd
-						      (logior 1
-							      ; range for random numbers
-							      ; generated with lcg
-							      ; should be: [0,2^(n-1)-1]
-							      (+ (lcg (expt 2 (1- n))
-								      69069 0)
-								 ; add 2^(n-1)
-								 (expt 2 (1- n))))))))
+						      ; range for random numbers
+						      ; generated with lcg
+						      ; should be: [0,2^(n-2)-1]
+						      ; shift bits so it's
+						      ; between [0,2^(n-1)-1]
+						      ; and the last bit is 0
+						      (+ (ash (lcg (expt 2 (- n
+									      2))
+								   69069 0) 1)
+							 ; add 2^(n-1) and 1, so
+							 ; it's an odd number of
+							 ; n bits
+							 (expt 2 (1- n)) 1)))))
 
 ;	      (defun super-duper ()
 ;		; generate random number with n bits
