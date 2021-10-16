@@ -10,7 +10,7 @@
 (defun check-for-divisors (r j s)
   ; check all odd divisors of r until √r
   (if (> j s)
-    (eval r)
+    r
     (if (not (equal (mod r j) 0))
       (check-for-divisors r (+ j 2) s))))
 
