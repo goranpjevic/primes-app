@@ -25,10 +25,10 @@
   ; get random number in range [a, b]
   (mod (+ a (lcg (expt 2 32) 69069 0)) (- b (1+ a))))
 
-(defun find-d-k (p &optional (d (1- p)) (k 0))
+(defun find-d-k (d k)
   ; return d and k, such that d*(2^k)==p-1
   (if (evenp d)
-    (find-d-k p (/ d 2) (1+ k))
+    (find-d-k (/ d 2) (1+ k))
     (values d k)))
 
 (defun update-x (x p k &optional (i 0))
@@ -42,7 +42,7 @@
   ; miller-rabin method for testing prime numbers
   (if (<= p 3) "prime"
     (if (evenp p) "not prime"
-      (multiple-value-bind (d k) (find-d-k p)
+      (multiple-value-bind (d k) (find-d-k (1- p) 0)
 	(or (dotimes (j s)
 	      (let ((a (random-number-in-range 2 (- p 2))))
 		(let ((x (mod (expt a d) p)))
