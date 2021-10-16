@@ -11,19 +11,17 @@
 	     b)
 	  m)))
 
+(defun check-for-divisors (r j s)
+  ; check all odd divisors of r until √r
+  (if (> j s)
+    (eval r)
+    (if (not (equal (mod r j) 0))
+      (check-for-divisors r (+ j 2) s))))
 (defun naive (random-number)
   ; naive method for testing prime numbers
-  (if (evenp random-number)
-    (naive (1+ random-number))
-    (let ((j 3)
-	  (sqr (sqrt random-number)))
-      (loop while (and (not (equal (mod random-number j) 0))
-		       (<= j sqr))
-	    do
-	    (setq j (+ j 2)))
-      (if (> j sqr)
-	(eval random-number)
-	(naive (+ random-number 2))))))
+  (or (check-for-divisors random-number 3 (sqrt random-number))
+      ; r is not prime, check r+2
+      (naive (+ random-number 2))))
 
 ; miller-rabin method for testing prime numbers
 (defun miller-rabin (random-number)
@@ -65,13 +63,15 @@
 		  ; check for prime numbers based on the chosen test method
 		  (setf (text result-output) (funcall (intern (string (value
 									naive-button)))
-						      ; range for random numbers
-						      ; generated with lcg
-						      ; should be: [0,2^(n-1)-1]
-						      (+ (lcg (expt 2 (1- n))
-							      69069 0)
-							 ; add 2^(n-1)
-							 (expt 2 (1- n)))))))
+						      ; make number odd
+						      (logior 1
+							      ; range for random numbers
+							      ; generated with lcg
+							      ; should be: [0,2^(n-1)-1]
+							      (+ (lcg (expt 2 (1- n))
+								      69069 0)
+								 ; add 2^(n-1)
+								 (expt 2 (1- n))))))))
 
 	      (defun super-duper ()
 		; generate random number with n bits
