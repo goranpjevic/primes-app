@@ -26,11 +26,13 @@
   (mod (+ a (lcg (expt 2 32) 69069 0)) (- b (1+ a))))
 
 (defun list-of-bits (integer)
+  ; convert an integer to a list of its bits
   (let ((bits '()))
     (dotimes (index (integer-length integer) bits)
       (push (if (logbitp index integer) 1 0) bits))))
 
 (defun modular-exponentiation (a b n)
+  ; calculate equations of the form a^b mod n
   (let ((d 1)
 	(bits (list-of-bits b)))
     (loop for i from 0 to (length bits) do
