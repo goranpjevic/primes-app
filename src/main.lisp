@@ -25,6 +25,20 @@
   ; get random number in range [a, b]
   (mod (+ a (lcg (expt 2 32) 69069 0)) (- b (1+ a))))
 
+(defun list-of-bits (integer)
+  (let ((bits '()))
+    (dotimes (index (integer-length integer) bits)
+      (push (if (logbitp index integer) 1 0) bits))))
+
+(defun modular-exponentiation (a b n)
+  (let ((d 1)
+	(bits (list-of-bits b)))
+    (loop for i from 0 to (length bits) do
+	  (setq d (mod (expt d 2) n))
+	  (if (equal (nth i bits) 1)
+	    (setq d (mod (* d a) n))))
+    d))
+
 (defun find-d-k (d k)
   ; return d and k, such that d*(2^k)==p-1
   (if (evenp d)
@@ -45,7 +59,7 @@
       (multiple-value-bind (d k) (find-d-k (1- p) 0)
 	(or (dotimes (j s)
 	      (let ((a (random-number-in-range 2 (- p 2))))
-		(let ((x (mod (expt a d) p)))
+		(let ((x (modular-exponentiation a d p)))
 		  (if (not (or (equal x 1)
 			       (equal (update-x x p k) (1- p))))
 		    (return "not prime")))))
