@@ -41,31 +41,30 @@
 	    (setq d (mod (* d a) n))))
     d))
 
-(defun find-d-k (d k)
-  ; return d and k, such that d*(2^k)==p-1
-  (if (evenp d)
-    (find-d-k (/ d 2) (1+ k))
-    (values d k)))
-
-(defun update-x (x p k &optional (i 0))
-  ; update the x value in the miller-rabin function
-  (if (and (<= i (1- k))
-	   (not (equal x (1- p))))
-    (update-x (mod (expt x 2) p) p k (1+ i))
-    x))
-
 (defun miller-rabin (p s)
   ; miller-rabin method for testing prime numbers
   (if (<= p 3) "prime"
     (if (evenp p) "not prime"
-      (multiple-value-bind (d k) (find-d-k (1- p) 0)
-	(or (dotimes (j s)
-	      (let ((a (random-number-in-range 2 (- p 2))))
-		(let ((x (modular-exponentiation a d p)))
+      (labels ((find-d-k (d k)
+			 ; return d and k, such that d*(2^k)=p-1
+			 (if (evenp d)
+			   (find-d-k (/ d 2) (1+ k))
+			   (values d k)))
+	       (update-x (x p k &optional (i 0))
+			 ; if ∃i:a^(d*2^i)≡−1 (mod p), then p is probably prime
+			 (if (and (<= i (1- k))
+				  (not (equal x (1- p))))
+			   (update-x (mod (expt x 2) p) p k (1+ i))
+			   x)))
+	(multiple-value-bind (d k) (find-d-k (1- p) 0)
+	  (or (dotimes (j s)
+		(let ((x (modular-exponentiation
+			   (random-number-in-range 2 (- p 2))
+			   d p)))
 		  (if (not (or (equal x 1)
 			       (equal (update-x x p k) (1- p))))
-		    (return "not prime")))))
-	    "probably prime")))))
+		    (return "not prime"))))
+	      "probably prime"))))))
 
 (defun main (*posix-argv*)
   ; gui main function
