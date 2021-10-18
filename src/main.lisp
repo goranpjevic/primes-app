@@ -45,10 +45,10 @@
 			   (values d k)))
 	       (update-x (x p k &optional (i 0))
 			 ; if ∃i:a^(d*2^i)≡−1 (mod p), then p is probably prime
-			 (if (and (<= i (1- k))
-				  (not (equal x (1- p))))
-			   (update-x (mod (expt x 2) p) p k (1+ i))
-			   x)))
+			 (if (or (> i (1- k))
+				 (equal x (1- p)))
+			   x
+			   (update-x (mod (expt x 2) p) p k (1+ i)))))
 	(multiple-value-bind (d k) (find-d-k (1- p) 0)
 	  (or (dotimes (j s)
 		(let ((x (modular-exponentiation
