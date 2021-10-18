@@ -25,14 +25,13 @@
   ; get random number in range [a, b]
   (mod (+ a (lcg (expt 2 32) 69069 0)) (- b (1+ a))))
 
-(defun modular-exponentiation (a b n)
+(defun modular-exponentiation (a b n &optional (i (integer-length b)) (d 1))
   ; calculate equations of the form a^b mod n
-  (let ((d 1))
-    (dotimes (i (integer-length b) d)
-      (setq d (mod (expt d 2) n))
-      ; check if i-th bit from the right is 1
-      (if (logbitp (- (integer-length b) i 1) b)
-	(setq d (mod (* d a) n))))))
+  (if (> i 0)
+    (if (logbitp (1- i) b)
+      (modular-exponentiation a b n (1- i) (mod (* (mod (expt d 2) n) a) n))
+      (modular-exponentiation a b n (1- i) (mod (expt d 2) n)))
+    d))
 
 (defun miller-rabin (p s)
   ; miller-rabin method for testing prime numbers
