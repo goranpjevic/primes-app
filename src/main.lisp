@@ -105,9 +105,9 @@
 			  (if (string= (string (value naive-button)) "NAIVE")
 			    (generate-random-prime-naive random-number)
 			    (generate-random-prime-miller-rabin random-number s)))
-		    (setf (text time-output) (* (- (get-internal-real-time) start-time)
-						(floor 1000000
-						       internal-time-units-per-second))))))
+		    (setf (text time-output) (floor (* (- (get-internal-real-time) start-time)
+						       (/ 1000000
+							  internal-time-units-per-second)))))))
 
 	      (defun check-prime ()
 		(let ((r (read-from-string (text prime-to-be-checked-entry)))
@@ -117,9 +117,9 @@
 			  (if (string= (string (value naive-button)) "NAIVE")
 			    (if (naive r) "prime" "not prime")
 			    (if (miller-rabin r s) "probably prime" "not prime")))
-		    (setf (text time-output) (* (- (get-internal-real-time) start-time)
-						(floor 1000000
-						       internal-time-units-per-second))))))
+		    (setf (text time-output) (floor (* (- (get-internal-real-time) start-time)
+						       (/ 1000000
+							  internal-time-units-per-second)))))))
 
 	      ; set default option for the radio buttons
 	      (setf (value naive-button) "NAIVE")
