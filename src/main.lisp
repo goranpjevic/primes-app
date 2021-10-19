@@ -7,14 +7,14 @@
 (defun lcg (m a b)
   (setf *r* (mod (+ (* a *r*) b) m)))
 
-(defun naive (r &optional (j 3) (s (sqrt r)))
-  ; check all odd divisors of r until √r
-  ; return r if it's prime, otherwise nil
-  (if (or (equal r 2) (not (evenp r)))
+(defun naive (p &optional (j 3) (s (sqrt p)))
+  ; check all odd divisors of p until √p
+  ; return p if it's prime, otherwise nil
+  (if (or (equal p 2) (not (evenp p)))
     (if (> j s)
-      r
-      (if (not (equal (mod r j) 0))
-	(naive r (+ j 2) s)))))
+      p
+      (if (not (equal (mod p j) 0))
+	(naive p (+ j 2) s)))))
 
 (defun generate-random-prime-naive (random-number)
   ; use naive method for testing prime numbers
