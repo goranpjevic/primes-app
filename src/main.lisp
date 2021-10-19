@@ -10,10 +10,11 @@
 (defun naive (r &optional (j 3) (s (sqrt r)))
   ; check all odd divisors of r until √r
   ; return r if it's prime, otherwise nil
-  (if (> j s)
-    r
-    (if (not (equal (mod r j) 0))
-      (naive r (+ j 2) s))))
+  (if (or (equal r 2) (not (evenp r)))
+    (if (> j s)
+      r
+      (if (not (equal (mod r j) 0))
+	(naive r (+ j 2) s)))))
 
 (defun generate-random-prime-naive (random-number)
   ; use naive method for testing prime numbers
