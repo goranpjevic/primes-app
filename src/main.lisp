@@ -26,7 +26,7 @@
   (mod (+ a (lcg (expt 2 32) 69069 0)) (- b (1+ a))))
 
 (defun modular-exponentiation (a b n &optional (i (integer-length b)) (d 1))
-  ; calculate equations of the form a^b mod n
+  ; calculate a^b mod n
   (if (> i 0)
     (if (logbitp (1- i) b)
       (modular-exponentiation a b n (1- i) (mod (* (mod (expt d 2) n) a) n))
@@ -34,7 +34,8 @@
     d))
 
 (defun miller-rabin (p s)
-  ; miller-rabin method for testing prime numbers
+  ; miller-rabin primality test
+  ; return r if it's prime, otherwise nil
   (if (<= p 3) p
     (if (not (evenp p))
       (labels ((find-d-k (d k)
@@ -96,7 +97,7 @@
 	      (defun generate-prime ()
 		(let ((n (read-from-string (text number-of-bits-entry)))
 		      (s (read-from-string (text s-entry))))
-		  ; generate random number of number_of_bits bits
+		  ; generate random number of n bits
 		  (let ((random-number (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
 					  (expt 2 (1- n)) 1))
 			(start-time (get-internal-real-time)))
