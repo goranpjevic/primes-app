@@ -61,6 +61,7 @@
 (defun generate-random-prime-miller-rabin (random-number s)
   ; use miller-rabin method for testing prime numbers
   (or (miller-rabin random-number s)
+      ; r is not prime, check r+2
       (generate-random-prime-miller-rabin (+ random-number 2) s)))
 
 (defun main (*posix-argv*)
@@ -69,29 +70,26 @@
 	    ; set window title
 	    (wm-title *tk* "primes")
 
-	    ; make radio buttons
-	    (let* ((naive-button (make-instance 'radio-button :text "naive"
-						:value "NAIVE"
-						:variable "method"))
-		   (miller-rabin-button (make-instance 'radio-button :text "miller-rabin"
-						       :value "MILLER-RABIN"
-						       :variable "method"))
+	    ; make all ui elements
+	    (let ((naive-button (make-instance 'radio-button :text "naive"
+					       :value "NAIVE"
+					       :variable "method"))
+		  (miller-rabin-button (make-instance 'radio-button :text "miller-rabin"
+						      :value "MILLER-RABIN"
+						      :variable "method"))
 
-		   ; make entry boxes
-		   (number-of-bits-entry (make-instance 'entry))
-		   (s-entry (make-instance 'entry))
-		   (prime-to-be-checked-entry (make-instance 'entry))
+		  (number-of-bits-entry (make-instance 'entry))
+		  (s-entry (make-instance 'entry))
+		  (prime-to-be-checked-entry (make-instance 'entry))
 
-		   ; make labels
-		   (number-of-bits-label (make-instance 'label :text "number of bits:"))
-		   (s-label (make-instance 'label :text "s:"))
-		   (prime-label (make-instance 'label :text "prime to be checked:"))
-		   (result-output (make-instance 'label :text ""))
-		   (time-output (make-instance 'label :text ""))
+		  (number-of-bits-label (make-instance 'label :text "number of bits:"))
+		  (s-label (make-instance 'label :text "s:"))
+		  (prime-label (make-instance 'label :text "prime to be checked:"))
+		  (result-output (make-instance 'label :text ""))
+		  (time-output (make-instance 'label :text ""))
 
-		   ; make buttons
-		   (generate-prime-button (make-instance 'button :text "generate prime"))
-		   (check-prime-button (make-instance 'button :text "check if prime")))
+		  (generate-prime-button (make-instance 'button :text "generate prime"))
+		  (check-prime-button (make-instance 'button :text "check if prime")))
 
 	      (defun generate-prime ()
 		(let ((n (read-from-string (text number-of-bits-entry)))
@@ -111,42 +109,6 @@
 			(if (string= (string (value naive-button)) "NAIVE")
 			  (if (naive r) "prime" "not prime")
 			  (if (miller-rabin r s) "probably prime" "not prime")))))
-
-;			    (funcall (intern (string (value naive-button)))
-;				     ; range for random numbers generated with lcg
-;				     ; should be: [0,2^(n-2)-1]
-;				     ; shift bits so it's between [0,2^(n-1)-1] and
-;				     ; the last bit is 0
-;				     (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
-;					; add 2^(n-1) and 1, so it's an odd number
-;					; of n bits
-;					(expt 2 (1- n)) 1)))))
-;
-;	      (defun generate-prime ()
-;		; get random number of number_of_bits bits
-;		(let ((n (read-from-string (text number-of-bits))))
-;		  ; check for prime numbers based on the chosen test method
-;		  (setf (text result-output)
-;			(funcall (intern (string (value naive-button)))
-;				 ; range for random numbers generated with lcg
-;				 ; should be: [0,2^(n-2)-1]
-;				 ; shift bits so it's between [0,2^(n-1)-1] and
-;				 ; the last bit is 0
-;				 (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
-;				    ; add 2^(n-1) and 1, so it's an odd number
-;				    ; of n bits
-;				    (expt 2 (1- n)) 1)))))
-
-;	      (defun super-duper ()
-;		; generate random number with n bits
-;		(if (equal (read-from-string (text number-of-bits))
-;				(+ 1 (floor (log
-;					      (lcg (expt 2 32) 69069 0)
-;					      2))))
-;		  ; check for prime numbers based on the chosen test method
-;		  (setf (text result-output) (funcall (intern (string (value
-;									naive-button)))))
-;		  (super-duper)))
 
 	      ; set default option for the radio buttons
 	      (setf (value naive-button) "NAIVE")
