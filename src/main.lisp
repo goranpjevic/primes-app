@@ -85,7 +85,7 @@
 
 		  (number-of-bits-label (make-instance 'label :text "number of bits:"))
 		  (accuracy-label (make-instance 'label :text "accuracy:"))
-		  (prime-label (make-instance 'label :text "prime to be checked:"))
+		  (prime-label (make-instance 'label :text "number to check:"))
 		  (result-output (make-instance 'label :text ""))
 		  (result-label (make-instance 'label :text "result:"))
 		  (time-output (make-instance 'label :text ""))
