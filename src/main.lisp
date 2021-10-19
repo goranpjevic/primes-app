@@ -7,19 +7,19 @@
 (defun lcg (m a b)
   (setf *r* (mod (+ (* a *r*) b) m)))
 
-(defun check-for-divisors (r &optional (j 3) (s (sqrt r)))
+(defun naive (r &optional (j 3) (s (sqrt r)))
   ; check all odd divisors of r until √r
   ; return r if it's prime, otherwise nil
   (if (> j s)
     r
     (if (not (equal (mod r j) 0))
-      (check-for-divisors r (+ j 2) s))))
+      (naive r (+ j 2) s))))
 
-(defun naive (random-number)
-  ; naive method for testing prime numbers
-  (or (check-for-divisors random-number)
+(defun generate-random-prime-naive (random-number)
+  ; use naive method for testing prime numbers
+  (or (naive random-number)
       ; r is not prime, check r+2
-      (naive (+ random-number 2))))
+      (generate-random-prime-naive (+ random-number 2))))
 
 (defun random-number-in-range (a b)
   ; get random number in range [a, b]
@@ -35,8 +35,8 @@
 
 (defun miller-rabin (p s)
   ; miller-rabin method for testing prime numbers
-  (if (<= p 3) "prime"
-    (if (evenp p) "not prime"
+  (if (<= p 3) p
+    (if (not (evenp p))
       (labels ((find-d-k (d k)
 			 ; return d and k, such that d*(2^k)=p-1
 			 (if (evenp d)
@@ -55,8 +55,13 @@
 			   d p)))
 		  (if (not (or (equal x 1)
 			       (equal (update-x x p k) (1- p))))
-		    (return "not prime"))))
-	      "probably prime"))))))
+		    (return-from miller-rabin nil))))
+	      p))))))
+
+(defun generate-random-prime-miller-rabin (random-number s)
+  ; use miller-rabin method for testing prime numbers
+  (or (miller-rabin random-number s)
+      (generate-random-prime-miller-rabin (+ random-number 2) s)))
 
 (defun main (*posix-argv*)
   ; gui main function
@@ -73,9 +78,9 @@
 						       :variable "method"))
 
 		   ; make entry boxes
-		   (number-of-bits (make-instance 'entry))
-		   (s (make-instance 'entry))
-		   (prime-to-be-checked (make-instance 'entry))
+		   (number-of-bits-entry (make-instance 'entry))
+		   (s-entry (make-instance 'entry))
+		   (prime-to-be-checked-entry (make-instance 'entry))
 
 		   ; make labels
 		   (number-of-bits-label (make-instance 'label :text "number of bits:"))
@@ -89,19 +94,48 @@
 		   (check-prime-button (make-instance 'button :text "check if prime")))
 
 	      (defun generate-prime ()
-		; get random number of number_of_bits bits
-		(let ((n (read-from-string (text number-of-bits))))
-		  ; check for prime numbers based on the chosen test method
+		(let ((n (read-from-string (text number-of-bits-entry)))
+		      (s (read-from-string (text s-entry))))
+		  ; generate random number of number_of_bits bits
+		  (let ((random-number (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
+					  (expt 2 (1- n)) 1)))
+		    (setf (text result-output)
+			  (if (string= (string (value naive-button)) "NAIVE")
+			    (generate-random-prime-naive random-number)
+			    (generate-random-prime-miller-rabin random-number s))))))
+
+	      (defun check-prime ()
+		(let ((r (read-from-string (text prime-to-be-checked-entry)))
+		      (s (read-from-string (text s-entry))))
 		  (setf (text result-output)
-			(funcall (intern (string (value naive-button)))
-				 ; range for random numbers generated with lcg
-				 ; should be: [0,2^(n-2)-1]
-				 ; shift bits so it's between [0,2^(n-1)-1] and
-				 ; the last bit is 0
-				 (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
-				    ; add 2^(n-1) and 1, so it's an odd number
-				    ; of n bits
-				    (expt 2 (1- n)) 1)))))
+			(if (string= (string (value naive-button)) "NAIVE")
+			  (if (naive r) "prime" "not prime")
+			  (if (miller-rabin r s) "probably prime" "not prime")))))
+
+;			    (funcall (intern (string (value naive-button)))
+;				     ; range for random numbers generated with lcg
+;				     ; should be: [0,2^(n-2)-1]
+;				     ; shift bits so it's between [0,2^(n-1)-1] and
+;				     ; the last bit is 0
+;				     (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
+;					; add 2^(n-1) and 1, so it's an odd number
+;					; of n bits
+;					(expt 2 (1- n)) 1)))))
+;
+;	      (defun generate-prime ()
+;		; get random number of number_of_bits bits
+;		(let ((n (read-from-string (text number-of-bits))))
+;		  ; check for prime numbers based on the chosen test method
+;		  (setf (text result-output)
+;			(funcall (intern (string (value naive-button)))
+;				 ; range for random numbers generated with lcg
+;				 ; should be: [0,2^(n-2)-1]
+;				 ; shift bits so it's between [0,2^(n-1)-1] and
+;				 ; the last bit is 0
+;				 (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
+;				    ; add 2^(n-1) and 1, so it's an odd number
+;				    ; of n bits
+;				    (expt 2 (1- n)) 1)))))
 
 ;	      (defun super-duper ()
 ;		; generate random number with n bits
@@ -119,16 +153,17 @@
 
 	      ; call generate-prime, when generate-prime-button is clicked
 	      (setf (command generate-prime-button) #'generate-prime)
+	      (setf (command check-prime-button) #'check-prime)
 
 	      ; put gui widgets on grid
 	      (grid naive-button 0 0 :padx 5 :pady 5)
 	      (grid miller-rabin-button 0 1 :padx 5 :pady 5)
 	      (grid number-of-bits-label 1 0 :padx 5 :pady 5)
-	      (grid number-of-bits 1 1 :padx 5 :pady 5)
+	      (grid number-of-bits-entry 1 1 :padx 5 :pady 5)
 	      (grid s-label 2 0 :padx 5 :pady 5)
-	      (grid s 2 1 :padx 5 :pady 5)
+	      (grid s-entry 2 1 :padx 5 :pady 5)
 	      (grid prime-label 3 0 :padx 5 :pady 5)
-	      (grid prime-to-be-checked 3 1 :padx 5 :pady 5)
+	      (grid prime-to-be-checked-entry 3 1 :padx 5 :pady 5)
 	      (grid generate-prime-button 4 0 :padx 5 :pady 5)
 	      (grid check-prime-button 4 1 :padx 5 :pady 5)
 	      (grid result-output 5 0 :padx 5 :pady 5)
