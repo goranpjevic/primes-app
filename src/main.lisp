@@ -80,11 +80,11 @@
 						      :variable "method"))
 
 		  (number-of-bits-entry (make-instance 'entry))
-		  (s-entry (make-instance 'entry))
+		  (accuracy-entry (make-instance 'entry))
 		  (prime-to-be-checked-entry (make-instance 'entry))
 
 		  (number-of-bits-label (make-instance 'label :text "number of bits:"))
-		  (s-label (make-instance 'label :text "s:"))
+		  (accuracy-label (make-instance 'label :text "accuracy:"))
 		  (prime-label (make-instance 'label :text "prime to be checked:"))
 		  (result-output (make-instance 'label :text ""))
 		  (result-label (make-instance 'label :text "result:"))
@@ -96,7 +96,7 @@
 
 	      (defun generate-prime ()
 		(let ((n (read-from-string (text number-of-bits-entry)))
-		      (s (read-from-string (text s-entry))))
+		      (s (read-from-string (text accuracy-entry))))
 		  ; generate random odd number of n bits
 		  (let ((random-number (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
 					  (expt 2 (1- n)) 1))
@@ -109,7 +109,7 @@
 
 	      (defun check-prime ()
 		(let ((r (read-from-string (text prime-to-be-checked-entry)))
-		      (s (read-from-string (text s-entry))))
+		      (s (read-from-string (text accuracy-entry))))
 		  (let ((start-time (get-internal-real-time)))
 		    (setf (text result-output)
 			  (if (string= (string (value naive-button)) "NAIVE")
@@ -129,8 +129,8 @@
 	      (grid miller-rabin-button 0 1 :padx 5 :pady 5)
 	      (grid number-of-bits-label 1 0 :padx 5 :pady 5)
 	      (grid number-of-bits-entry 1 1 :padx 5 :pady 5)
-	      (grid s-label 2 0 :padx 5 :pady 5)
-	      (grid s-entry 2 1 :padx 5 :pady 5)
+	      (grid accuracy-label 2 0 :padx 5 :pady 5)
+	      (grid accuracy-entry 2 1 :padx 5 :pady 5)
 	      (grid prime-label 3 0 :padx 5 :pady 5)
 	      (grid prime-to-be-checked-entry 3 1 :padx 5 :pady 5)
 	      (grid generate-prime-button 4 0 :padx 5 :pady 5)
