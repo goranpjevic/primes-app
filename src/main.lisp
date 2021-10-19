@@ -97,7 +97,7 @@
 	      (defun generate-prime ()
 		(let ((n (read-from-string (text number-of-bits-entry)))
 		      (s (read-from-string (text s-entry))))
-		  ; generate random number of n bits
+		  ; generate random odd number of n bits
 		  (let ((random-number (+ (ash (lcg (expt 2 (- n 2)) 69069 0) 1)
 					  (expt 2 (1- n)) 1))
 			(start-time (get-internal-real-time)))
