@@ -1,29 +1,27 @@
 # primes
 
 a gui app, created with [ltk](http://www.peter-herth.de/ltk/) for generating
-prime numbers.
+prime numbers, and checking if a number is prime.
 
-the program checks for primes with a naive test and the [miller–rabin primality test](https://en.wikipedia.org/wiki/Miller–Rabin_primality_test).
+the program checks for primes with a naive test (checks all odd divisors from 3
+to √p), and the
+[miller–rabin primality test](https://en.wikipedia.org/wiki/Miller–Rabin_primality_test).
+
+random numbers are generated using a
+[linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator).
 
 ## features
 
-* generate prime numbers based on a specified number of bits
-* check, whether a number is prime or not
+* generate prime numbers:
+	* choose primality test
+	* choose the number of bits for the random number
+	* choose the accuracy for the `miller-rabin` primality test
+* check if a number is prime:
+	* choose primality test
+	* choose the accuracy for the `miller-rabin` primality test
+	* choose number to be checked
+* the time is measured for both functions
 
 ## screenshot
 
 ![screenshot](images/screenshot.png)
-
-## how it works
-
-### lcg
-
-random numbers are generated using a [linear congruential generator](https://en.wikipedia.org/wiki/Linear_congruential_generator).
-
-the lcg algorithm works as follows:
-
-```
-r(i+1) = a*r(i) + b (mod m)
-```
-
-the seed r(0) is set to 1.
