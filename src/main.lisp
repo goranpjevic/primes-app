@@ -35,7 +35,7 @@
 
 (defun miller-rabin (p s)
   ; miller-rabin primality test
-  ; return r if it's prime, otherwise nil
+  ; return p if it's prime, otherwise nil
   (if (<= p 3) p
     (if (not (evenp p))
       (labels ((find-d-k (d k)
