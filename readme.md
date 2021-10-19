@@ -3,7 +3,7 @@
 a gui app, created with [ltk](http://www.peter-herth.de/ltk/) for generating
 prime numbers.
 
-the program checks for primes with a naive test and the [miller–rabin primality test](https://en.wikipedia.org/wiki/miller%e2%80%93rabin_primality_test).
+the program checks for primes with a naive test and the [miller–rabin primality test](https://en.wikipedia.org/wiki/Miller–Rabin_primality_test).
 
 ## features
 
